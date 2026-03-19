@@ -34,7 +34,7 @@
     .header-agency { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; opacity: .7; margin-bottom: 2px; }
     .header-title  { font-size: 16px; font-weight: 700; line-height: 1.2; }
     .header-sub    { font-size: 11px; opacity: .55; margin-top: 3px; }
-    .btn-print {
+    .btn-view {
       background: #c8a84b;
       color: #1a1f2e;
       border: none;
@@ -48,8 +48,9 @@
       gap: 7px;
       flex-shrink: 0;
       transition: background .15s;
+      text-decoration: none;
     }
-    .btn-print:hover { background: #dbb94f; }
+    .btn-view:hover { background: #dbb94f; }
     .situsbar {
       background: #fff;
       border-bottom: 1px solid #d1d5de;
@@ -82,8 +83,10 @@
       letter-spacing: .09em;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 8px;
     }
+    .section-head-left { display: flex; align-items: center; gap: 8px; }
     .section-head-icon {
       width: 16px; height: 16px;
       background: rgba(200,168,75,0.3);
@@ -91,6 +94,15 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 10px;
     }
+    .section-head-link {
+      font-size: 10px;
+      font-weight: 400;
+      color: #c8a84b;
+      text-decoration: none;
+      opacity: .9;
+      white-space: nowrap;
+    }
+    .section-head-link:hover { opacity: 1; text-decoration: underline; }
     .dtable { width: 100%; border-collapse: collapse; }
     .dtable tr { border-bottom: 1px solid #eef0f4; }
     .dtable tr:last-child { border-bottom: none; }
@@ -99,6 +111,10 @@
     .dtable td:first-child { color: #6b7280; width: 44%; white-space: nowrap; }
     .dtable td:last-child  { font-weight: 500; color: #1a1f2e; }
     .val-blue { color: #1a3a6b; }
+    .val-link { color: #1a3a6b; text-decoration: none; font-weight: 500; }
+    .val-link:hover { text-decoration: underline; }
+    .setback-link { color: #1a3a6b; text-decoration: none; font-weight: 500; font-size: 12.5px; }
+    .setback-link:hover { text-decoration: underline; }
     .ca-table { width: 100%; border-collapse: collapse; }
     .ca-table td { padding: 7px 14px; vertical-align: top; border-bottom: 1px solid #eef0f4; width: 50%; font-size: 12.5px; }
     .ca-table tr:last-child td { border-bottom: none; }
@@ -119,6 +135,12 @@
       line-height: 1.65;
     }
     .disclaimer strong { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 5px; color: #9a7a1a; }
+    .disclaimer-print {
+      margin-top: 8px;
+      font-size: 11px;
+      color: #9a7a1a;
+      font-weight: 600;
+    }
     .footer {
       max-width: 900px;
       margin: 0 auto;
@@ -128,11 +150,14 @@
       border-top: 1px solid #d1d5de;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
+      gap: 16px;
     }
+    .footer a { color: #9ca3af; text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
     @media print {
       body { background: #fff; padding: 0; font-size: 11px; }
-      .btn-print { display: none !important; }
+      .btn-view { display: none !important; }
       .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 10px 20px; }
       .situsbar { padding: 8px 20px; }
       .page { margin: 14px auto; padding: 0 16px; }
@@ -143,6 +168,7 @@
       .section { break-inside: avoid; margin-bottom: 10px; }
       .disclaimer { break-inside: avoid; }
       .footer { margin-top: 10px; }
+      .disclaimer-print { display: none; }
     }
   </style>
 </head>
@@ -159,17 +185,10 @@
       <div class="header-sub">Parcel Information Report &nbsp;·&nbsp; <span id="report-date"></span></div>
     </div>
   </div>
-
-  <div style="display:flex;gap:8px;">
-    <button class="btn-print" onclick="openReportView();">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      View Report
-    </button>
-    <button class="btn-print" onclick="openPrintView();">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-      Print / Save PDF
-    </button>
-  </div>
+  <button class="btn-view" onclick="window.open(window.location.href, '_blank');">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    View Report
+  </button>
 </div>
 
 <div class="situsbar">
@@ -183,35 +202,65 @@
 <div class="page">
   <div class="two-col">
     <div class="two-col-cell">
+
+      <!-- Property Information -->
       <div class="section">
-        <div class="section-head"><span class="section-head-icon">📋</span>Property Information</div>
+        <div class="section-head">
+          <div class="section-head-left"><span class="section-head-icon">📋</span>Property Information</div>
+        </div>
         <table class="dtable">
           <tr><td>Parcel Number</td><td class="val-blue" id="f-geo">—</td></tr>
           <tr><td>Owner</td><td class="val-blue" id="f-owner">—</td></tr>
           <tr><td>Mailing Address</td><td id="f-mail">—</td></tr>
           <tr><td>Legal Description</td><td id="f-legal">—</td></tr>
-          <tr><td>Acreage</td><td id="f-acres">—</td></tr>
+          <tr><td>Area (ac)</td><td id="f-acres">—</td></tr>
+          <tr><td>Assessor's Website</td><td id="f-link">—</td></tr>
         </table>
       </div>
+
     </div>
     <div class="two-col-cell">
+
+      <!-- Development Regulations -->
       <div class="section">
-        <div class="section-head"><span class="section-head-icon">📐</span>Development Regulations</div>
+        <div class="section-head">
+          <div class="section-head-left"><span class="section-head-icon">📐</span>Development Regulations</div>
+        </div>
         <table class="dtable">
           <tr><td>Zoning</td><td class="val-blue" id="f-zoning">—</td></tr>
           <tr><td>Land Use</td><td id="f-landuse">—</td></tr>
           <tr><td>UGA Designation</td><td id="f-uga">—</td></tr>
           <tr><td>Shoreline Jurisdiction</td><td id="f-shoreline">—</td></tr>
-          <tr><td>Flood Risk</td><td id="f-flood">—</td></tr>
           <tr><td>Mill Creek Fire District</td><td id="f-millcreek">—</td></tr>
+          <tr>
+            <td><a class="setback-link" href="https://library.municode.com/wa/walla_walla_county/codes/code_of_ordinances?nodeId=TIT17ZO_CH17.18DESTENDI" target="_blank">Front Setback &#8599;</a></td>
+            <td id="f-sfr">—</td>
+          </tr>
+          <tr>
+            <td><a class="setback-link" href="https://library.municode.com/wa/walla_walla_county/codes/code_of_ordinances?nodeId=TIT17ZO_CH17.18DESTENDI" target="_blank">Side Setback &#8599;</a></td>
+            <td id="f-ssi">—</td>
+          </tr>
+          <tr>
+            <td><a class="setback-link" href="https://library.municode.com/wa/walla_walla_county/codes/code_of_ordinances?nodeId=TIT17ZO_CH17.18DESTENDI" target="_blank">Rear Setback &#8599;</a></td>
+            <td id="f-sre">—</td>
+          </tr>
         </table>
       </div>
+
     </div>
   </div>
 
+  <!-- Critical Areas -->
   <div class="section">
-    <div class="section-head"><span class="section-head-icon">⚠</span>Critical Areas</div>
+    <div class="section-head">
+      <div class="section-head-left"><span class="section-head-icon">⚠</span>Critical Areas</div>
+      <a class="section-head-link" href="https://library.municode.com/wa/walla_walla_county/codes/code_of_ordinances?nodeId=TIT18EN_CH18.08CRARPR" target="_blank">&#128214; WWCC Chapter 18.08</a>
+    </div>
     <table class="ca-table">
+      <tr>
+        <td><div class="ca-label">Flood Risk</div><div class="ca-val" id="f-flood">—</div></td>
+        <td><div class="ca-label">Flood Zone</div><div class="ca-val" id="f-fz">—</div></td>
+      </tr>
       <tr>
         <td><div class="ca-label">CARA High Recharge Vulnerability</div><div class="ca-val" id="f-chr">—</div></td>
         <td><div class="ca-label">CARA Moderate Recharge Vulnerability</div><div class="ca-val" id="f-cmr">—</div></td>
@@ -238,12 +287,17 @@
   <div class="disclaimer">
     <strong>Disclaimer</strong>
     This report is for reference purposes only. GIS data is continuously updated and does not constitute an official county determination. Field verification and consultation with Walla Walla County planning staff is recommended prior to any permitting, development, or legal action.
+    <div class="disclaimer-print">Press Ctrl+P to Print Report</div>
   </div>
 </div>
 
 <div class="footer">
-  <span>Walla Walla County Community Development Department &nbsp;·&nbsp; GIS Division</span>
-  <span id="footer-date"></span>
+  <div>
+    <div>Walla Walla County Community Development Department</div>
+    <div>310 W. Poplar Street, Suite 200 &nbsp;·&nbsp; Walla Walla, WA 99362</div>
+    <div>509-524-2610 &nbsp;·&nbsp; <a href="mailto:commdev@wwcowa.gov">commdev@wwcowa.gov</a></div>
+  </div>
+  <div style="text-align:right;white-space:nowrap;" id="footer-date"></div>
 </div>
 
 <script>
@@ -264,65 +318,21 @@
   function setCA(id, val) {
     var el = document.getElementById(id);
     if (!el) return;
-    if (!val) {
-      el.textContent = '—';
-      return;
-    }
+    if (!val) { el.textContent = '—'; return; }
     el.textContent = val;
     var lower = val.toLowerCase();
-    el.classList.remove('ca-yes', 'ca-no', 'ca-val-text');
     if (lower === 'yes') el.classList.add('ca-yes');
     else if (lower === 'no') el.classList.add('ca-no');
     else el.classList.add('ca-val-text');
   }
 
-  function openReportView() {
-    var url = new URL(window.location.href);
-    url.searchParams.delete('autoprint');
-    window.open(url.toString(), '_blank', 'noopener');
-  }
-
-  function openPrintView() {
-    var url = new URL(window.location.href);
-    url.searchParams.set('autoprint', '1');
-    window.open(url.toString(), '_blank', 'noopener');
-  }
-
-  function waitForImagesThenPrint() {
-    var imgs = document.querySelectorAll('img');
-    if (imgs.length === 0) {
-      setTimeout(function () {
-        window.print();
-      }, 800);
-      return;
-    }
-
-    var loaded = 0;
-    function done() {
-      loaded++;
-      if (loaded >= imgs.length) {
-        setTimeout(function () {
-          window.print();
-        }, 800);
-      }
-    }
-
-    imgs.forEach(function (img) {
-      if (img.complete) done();
-      else {
-        img.onload = done;
-        img.onerror = done;
-      }
-    });
-  }
-
-  // Dates
+  // ── Dates ──
   var now = new Date();
   var dateStr = now.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
   document.getElementById('report-date').textContent = 'Generated ' + dateStr;
   document.getElementById('footer-date').textContent = 'Generated: ' + dateStr;
 
-  // Header
+  // ── Header / situs bar ──
   set('hdr-situs', get('sit'));
   var ownerEl = document.getElementById('hdr-owner');
   var own = get('own');
@@ -331,8 +341,8 @@
   var geo = get('geo');
   if (geoEl) geoEl.textContent = geo ? 'Parcel ID: ' + geo : '';
 
-  // Property Information
-  set('f-geo', get('geo'));
+  // ── Property Information ──
+  set('f-geo',   get('geo'));
   set('f-owner', get('own'));
 
   var mailEl = document.getElementById('f-mail');
@@ -342,45 +352,48 @@
   if (pst) line2 += (line2 ? ', ' : '') + pst;
   if (zip) line2 += (line2 ? ' ' : '') + zip;
   if (mailEl) {
-    if (ad1 && line2) mailEl.innerHTML = ad1 + '<br>' + line2;
-    else if (ad1) mailEl.textContent = ad1;
-    else if (line2) mailEl.textContent = line2;
-    else mailEl.textContent = '—';
+    if (ad1 && line2)    mailEl.innerHTML = ad1 + '<br>' + line2;
+    else if (ad1)        mailEl.textContent = ad1;
+    else if (line2)      mailEl.textContent = line2;
+    else                 mailEl.textContent = '—';
   }
 
   set('f-legal', get('leg'));
   var acr = get('acr');
-  document.getElementById('f-acres').textContent = acr ? acr + ' acres' : '—';
+  document.getElementById('f-acres').textContent = acr ? acr + ' ac' : '—';
 
-  // Development Regulations
+  // Assessor link
+  var lnk = get('lnk');
+  var linkEl = document.getElementById('f-link');
+  if (linkEl) {
+    if (lnk) {
+      linkEl.innerHTML = '<a class="val-link" href="' + lnk + '" target="_blank">View Property Record &#8599;</a>';
+    } else {
+      linkEl.textContent = '—';
+    }
+  }
+
+  // ── Development Regulations ──
   var zon = get('zon'), zab = get('zab');
   set('f-zoning', zon ? (zab ? zon + '  (' + zab + ')' : zon) : null);
   var lu = get('lu'), lab = get('lab');
   set('f-landuse', lu ? (lab ? lu + '  (' + lab + ')' : lu) : null);
-  set('f-uga', get('uga'));
+  set('f-uga',       get('uga'));
   set('f-shoreline', get('sho'));
-  var fr = get('fr'), fz = get('fz');
-  set('f-flood', fr ? (fz ? fr + ',  ' + fz : fr) : (fz || null));
   set('f-millcreek', get('mc'));
+  set('f-sfr', get('sfr'));
+  set('f-ssi', get('ssi'));
+  set('f-sre', get('sre'));
 
-  // Critical Areas
-  setCA('f-chr', get('chr'));
-  setCA('f-cmr', get('cmr'));
-  setCA('f-cwi', get('cwi'));
-  setCA('f-chk', get('chk'));
-  setCA('f-cso', get('cso'));
-  setCA('f-csl', get('csl'));
-  setCA('f-cwe', get('cwe'));
-  setCA('f-cli', get('cli'));
+  // ── Critical Areas ──
+  var fr = get('fr'), fz = get('fz');
+  setCA('f-flood', fr);
+  set('f-fz', fz);
+  setCA('f-chr', get('chr')); setCA('f-cmr', get('cmr'));
+  setCA('f-cwi', get('cwi')); setCA('f-chk', get('chk'));
+  setCA('f-cso', get('cso')); setCA('f-csl', get('csl'));
+  setCA('f-cwe', get('cwe')); setCA('f-cli', get('cli'));
   set('f-crp', get('crp'));
-
-  // Auto-print only when opened as a top-level page with ?autoprint=1
-  window.addEventListener('load', function () {
-    var params = new URLSearchParams(window.location.search);
-    if (params.get('autoprint') === '1') {
-      waitForImagesThenPrint();
-    }
-  });
 </script>
 
 </body>
