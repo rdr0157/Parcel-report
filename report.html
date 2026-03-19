@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Walla Walla County Community Development – Parcel Information Report</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f2f5;
+      color: #1a1f2e;
+      font-size: 14px;
+      padding-bottom: 48px;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: #1a3a6b;
+      color: #fff;
+      padding: 14px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 4px solid #c8a84b;
+    }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .header-seal {
+      width: 50px; height: 50px;
+      border: 2px solid rgba(200,168,75,0.7);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+      background: rgba(255,255,255,0.08);
+    }
+    .header-agency { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; opacity: .7; margin-bottom: 2px; }
+    .header-title  { font-size: 16px; font-weight: 700; line-height: 1.2; }
+    .header-sub    { font-size: 11px; opacity: .55; margin-top: 3px; }
+
+    .btn-print {
+      background: #c8a84b;
+      color: #1a1f2e;
+      border: none;
+      border-radius: 4px;
+      padding: 9px 20px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-shrink: 0;
+      transition: background .15s;
+    }
+    .btn-print:hover { background: #dbb94f; }
+
+    /* ── Situs bar ── */
+    .situsbar {
+      background: #fff;
+      border-bottom: 1px solid #d1d5de;
+      padding: 10px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .situsbar-addr  { font-size: 17px; font-weight: 700; color: #1a3a6b; }
+    .situsbar-owner { font-size: 12px; color: #6b7280; margin-top: 2px; }
+    .situsbar-id    { font-family: monospace; font-size: 11px; color: #9ca3af; background: #f3f4f6; padding: 3px 10px; border-radius: 12px; white-space: nowrap; }
+
+    /* ── Page ── */
+    .page { max-width: 900px; margin: 22px auto; padding: 0 22px; }
+
+    /* ── Two-column wrapper ── */
+    .two-col { display: table; width: 100%; border-spacing: 14px 0; margin: 0 -14px 14px; }
+    .two-col-cell { display: table-cell; width: 50%; vertical-align: top; }
+
+    /* ── Card / Section ── */
+    .section {
+      background: #fff;
+      border: 1px solid #d1d5de;
+      border-radius: 7px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .section-head {
+      background: #1a3a6b;
+      color: #fff;
+      padding: 7px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-head-icon {
+      width: 16px; height: 16px;
+      background: rgba(200,168,75,0.3);
+      border-radius: 3px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px;
+    }
+
+    /* ── Data table ── */
+    .dtable { width: 100%; border-collapse: collapse; }
+    .dtable tr { border-bottom: 1px solid #eef0f4; }
+    .dtable tr:last-child { border-bottom: none; }
+    .dtable tr:nth-child(even) { background: #fafbfd; }
+    .dtable td { padding: 6px 14px; font-size: 12.5px; vertical-align: top; line-height: 1.4; }
+    .dtable td:first-child { color: #6b7280; width: 44%; white-space: nowrap; }
+    .dtable td:last-child  { font-weight: 500; color: #1a1f2e; }
+    .val-blue { color: #1a3a6b; }
+    .val-gold  { color: #9a7a1a; }
+
+    /* ── Critical areas grid (table-based for print safety) ── */
+    .ca-table { width: 100%; border-collapse: collapse; }
+    .ca-table td { padding: 7px 14px; vertical-align: top; border-bottom: 1px solid #eef0f4; width: 50%; font-size: 12.5px; }
+    .ca-table tr:last-child td { border-bottom: none; }
+    .ca-table td:first-child { border-right: 1px solid #eef0f4; }
+    .ca-label { color: #6b7280; font-size: 11px; margin-bottom: 2px; }
+    .ca-val   { font-weight: 600; }
+    .ca-yes   { color: #dc2626; }
+    .ca-no    { color: #6b7280; font-weight: 400; }
+    .ca-val-text { color: #1a3a6b; }
+
+    /* ── Disclaimer ── */
+    .disclaimer {
+      border: 1px solid #c8a84b;
+      background: #fdfbf3;
+      border-radius: 7px;
+      padding: 11px 16px;
+      margin-bottom: 16px;
+      font-size: 11.5px;
+      color: #5c4a1a;
+      line-height: 1.65;
+    }
+    .disclaimer strong { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 5px; color: #9a7a1a; }
+
+    /* ── Footer ── */
+    .footer {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 10px 22px;
+      font-size: 11px;
+      color: #9ca3af;
+      border-top: 1px solid #d1d5de;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* ── Print ── */
+    @media print {
+      body { background: #fff; padding: 0; font-size: 11px; }
+      .btn-print { display: none !important; }
+
+      .header {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        padding: 10px 20px;
+      }
+      .situsbar { padding: 8px 20px; }
+      .page { margin: 14px auto; padding: 0 16px; }
+
+      .section-head {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      /* Stack two columns vertically for print */
+      .two-col { display: block; margin: 0 0 14px; }
+      .two-col-cell { display: block; width: 100%; }
+      .two-col-cell .section { margin-bottom: 12px; }
+
+      .section { break-inside: avoid; margin-bottom: 10px; }
+      .disclaimer { break-inside: avoid; }
+      .footer { margin-top: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-seal">⚖</div>
+    <div>
+      <div class="header-agency">Walla Walla County</div>
+      <div class="header-title">Community Development</div>
+      <div class="header-sub">Parcel Information Report &nbsp;·&nbsp; <span id="report-date"></span></div>
+    </div>
+  </div>
+  <button class="btn-print" onclick="window.print()">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Print / Save PDF
+  </button>
+</div>
+
+<!-- ── Situs bar ── -->
+<div class="situsbar">
+  <div>
+    <div class="situsbar-addr" id="hdr-situs">—</div>
+    <div class="situsbar-owner" id="hdr-owner"></div>
+  </div>
+  <div class="situsbar-id" id="hdr-geo"></div>
+</div>
+
+<!-- ── Body ── -->
+<div class="page">
+
+  <!-- Row 1: Property Info + Development Regulations -->
+  <div class="two-col">
+    <div class="two-col-cell">
+
+      <!-- Property Information -->
+      <div class="section">
+        <div class="section-head"><span class="section-head-icon">📋</span>Property Information</div>
+        <table class="dtable">
+          <tr><td>Owner</td><td class="val-blue" id="f-owner">—</td></tr>
+          <tr><td>Mailing Address</td><td id="f-mail">—</td></tr>
+          <tr><td>Legal Description</td><td id="f-legal">—</td></tr>
+          <tr><td>Acreage</td><td id="f-acres">—</td></tr>
+        </table>
+      </div>
+
+    </div>
+    <div class="two-col-cell">
+
+      <!-- Development Regulations -->
+      <div class="section">
+        <div class="section-head"><span class="section-head-icon">📐</span>Development Regulations</div>
+        <table class="dtable">
+          <tr><td>Zoning</td><td class="val-blue" id="f-zoning">—</td></tr>
+          <tr><td>Land Use</td><td id="f-landuse">—</td></tr>
+          <tr><td>UGA Designation</td><td id="f-uga">—</td></tr>
+          <tr><td>Shoreline Jurisdiction</td><td id="f-shoreline">—</td></tr>
+          <tr><td>Flood Risk</td><td id="f-flood">—</td></tr>
+          <tr><td>Mill Creek Fire District</td><td id="f-millcreek">—</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Critical Areas (full width) -->
+  <div class="section">
+    <div class="section-head"><span class="section-head-icon">⚠</span>Critical Areas</div>
+    <table class="ca-table">
+      <tr>
+        <td>
+          <div class="ca-label">CARA High Recharge Vulnerability</div>
+          <div class="ca-val" id="f-chr">—</div>
+        </td>
+        <td>
+          <div class="ca-label">CARA Moderate Recharge Vulnerability</div>
+          <div class="ca-val" id="f-cmr">—</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="ca-label">Priority Habitat – Winter Raptor</div>
+          <div class="ca-val" id="f-cwi">—</div>
+        </td>
+        <td>
+          <div class="ca-label">Priority Habitat – Ferruginous Hawk</div>
+          <div class="ca-val" id="f-chk">—</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="ca-label">Priority Habitat – Songbird</div>
+          <div class="ca-val" id="f-cso">—</div>
+        </td>
+        <td>
+          <div class="ca-label">Slope / Erosion Hazard</div>
+          <div class="ca-val" id="f-csl">—</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="ca-label">Wetlands</div>
+          <div class="ca-val" id="f-cwe">—</div>
+        </td>
+        <td>
+          <div class="ca-label">Liquefaction Hazard</div>
+          <div class="ca-val" id="f-cli">—</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="ca-label">Riparian Buffer</div>
+          <div class="ca-val ca-val-text" id="f-crp">—</div>
+        </td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Disclaimer -->
+  <div class="disclaimer">
+    <strong>Disclaimer</strong>
+    This report is for reference purposes only. GIS data is continuously updated and does not constitute an official county determination. Field verification and consultation with Walla Walla County planning staff is recommended prior to any permitting, development, or legal action.
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <span>Walla Walla County Community Development Department &nbsp;·&nbsp; GIS Division</span>
+  <span id="footer-date"></span>
+</div>
+
+<script>
+  const p = new URLSearchParams(window.location.search);
+
+  // Safely retrieve and decode a URL param
+  function get(key) {
+    const v = p.get(key);
+    if (!v || v === 'null' || v === 'undefined') return null;
+    const decoded = decodeURIComponent(v).trim();
+    return decoded === '' ? null : decoded;
+  }
+
+  // Set an element's text content
+  function set(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val || '—';
+  }
+
+  // Set CA field with Yes/No color coding
+  function setCA(id, val) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (!val) { el.textContent = '—'; return; }
+    el.textContent = val;
+    const lower = val.toLowerCase();
+    if (lower === 'yes') el.classList.add('ca-yes');
+    else if (lower === 'no') el.classList.add('ca-no');
+    else el.classList.add('ca-val-text');
+  }
+
+  // ── Dates ──
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  document.getElementById('report-date').textContent  = 'Generated ' + dateStr;
+  document.getElementById('footer-date').textContent  = 'Generated: ' + dateStr;
+
+  // ── Header / situs bar ──
+  set('hdr-situs', get('sit'));
+  const ownerEl = document.getElementById('hdr-owner');
+  const own = get('own');
+  if (ownerEl && own) ownerEl.textContent = 'Owner: ' + own;
+
+  const geoEl = document.getElementById('hdr-geo');
+  const geo = get('geo');
+  if (geoEl) geoEl.textContent = geo ? 'Parcel ID: ' + geo : '';
+
+  // ── Property Information ──
+  set('f-owner', get('own'));
+
+  // Mailing address — combine address + city/state/zip
+  const mailEl = document.getElementById('f-mail');
+  if (mailEl) {
+    const ad1 = get('ad1');
+    const cty  = get('cty');
+    const pst  = get('pst');
+    const zip  = get('zip');
+    let line2 = '';
+    if (cty) line2 += cty;
+    if (pst) line2 += (line2 ? ', ' : '') + pst;
+    if (zip) line2 += (line2 ? ' '  : '') + zip;
+    if (ad1 && line2)      mailEl.innerHTML = ad1 + '<br>' + line2;
+    else if (ad1)          mailEl.textContent = ad1;
+    else if (line2)        mailEl.textContent = line2;
+    else                   mailEl.textContent = '—';
+  }
+
+  set('f-legal', get('leg'));
+  const acr = get('acr');
+  document.getElementById('f-acres').textContent = acr ? acr + ' acres' : '—';
+
+  // ── Development Regulations ──
+  const zon = get('zon'), zab = get('zab');
+  set('f-zoning',  zon ? (zab ? zon + '  (' + zab + ')' : zon) : null);
+
+  const lu = get('lu'), lab = get('lab');
+  set('f-landuse', lu  ? (lab ? lu  + '  (' + lab + ')' : lu)  : null);
+
+  set('f-uga',      get('uga'));
+  set('f-shoreline', get('sho'));
+
+  const fr = get('fr'), fz = get('fz');
+  set('f-flood', fr ? (fz ? fr + ',  ' + fz : fr) : (fz || null));
+
+  set('f-millcreek', get('mc'));
+
+  // ── Critical Areas ──
+  setCA('f-chr', get('chr'));
+  setCA('f-cmr', get('cmr'));
+  setCA('f-cwi', get('cwi'));
+  setCA('f-chk', get('chk'));
+  setCA('f-cso', get('cso'));
+  setCA('f-csl', get('csl'));
+  setCA('f-cwe', get('cwe'));
+  setCA('f-cli', get('cli'));
+  set('f-crp',   get('crp'));   // Riparian is a distance value, not Yes/No
+</script>
+
+</body>
+</html>
