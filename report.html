@@ -150,14 +150,24 @@
 
 <div class="header">
   <div class="header-left">
-    <div class="header-seal"><img src="https://jobs.wsac.org/wp-content/uploads/job-manager-uploads/company_logo/2022/03/Walla-Walla-County-Seal-147x150.jpg" alt="Walla Walla County Seal" style="width:44px;height:45px;object-fit:contain;border-radius:50%;"></div>
+    <div class="header-seal">
+      <img src="https://jobs.wsac.org/wp-content/uploads/job-manager-uploads/company_logo/2022/03/Walla-Walla-County-Seal-147x150.jpg" alt="Walla Walla County Seal" style="width:44px;height:45px;object-fit:contain;border-radius:50%;">
+    </div>
     <div>
       <div class="header-agency">Walla Walla County</div>
       <div class="header-title">Community Development</div>
       <div class="header-sub">Parcel Information Report &nbsp;·&nbsp; <span id="report-date"></span></div>
     </div>
   </div>
-  <button class="btn-print" onclick="printReport();">
+
+  <!-- Button A: shown when embedded in Dashboard (no print=1 in URL) -->
+  <button id="btn-newtab" class="btn-print" style="display:none;" onclick="window.open(window.location.href + '&print=1', '_blank');">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    Open Full Report
+  </button>
+
+  <!-- Button B: shown on standalone page (print=1 in URL) -->
+  <button id="btn-print" class="btn-print" style="display:none;" onclick="window.print();">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
     Print / Save PDF
   </button>
@@ -242,8 +252,9 @@
 
   function get(key) {
     var v = p.get(key);
-    if (!v || v === 'null' || v === 'undefined') return '';
-    return decodeURIComponent(v).trim();
+    if (!v || v === 'null' || v === 'undefined') return null;
+    var decoded = decodeURIComponent(v).trim();
+    return decoded === '' ? null : decoded;
   }
 
   function set(id, val) {
@@ -262,28 +273,24 @@
     else el.classList.add('ca-val-text');
   }
 
-  function caColor(val) {
-    var lower = (val || '').toLowerCase();
-    if (lower === 'yes') return '#dc2626';
-    if (lower === 'no')  return '#9ca3af';
-    return '#1a3a6b';
-  }
-
-  // ── Populate page ──
+  // ── Dates ──
   var now = new Date();
   var dateStr = now.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
   document.getElementById('report-date').textContent = 'Generated ' + dateStr;
   document.getElementById('footer-date').textContent = 'Generated: ' + dateStr;
 
-  var sit = get('sit'), own = get('own'), geo = get('geo');
-  set('hdr-situs', sit);
+  // ── Header ──
+  set('hdr-situs', get('sit'));
   var ownerEl = document.getElementById('hdr-owner');
+  var own = get('own');
   if (ownerEl && own) ownerEl.textContent = 'Owner: ' + own;
   var geoEl = document.getElementById('hdr-geo');
+  var geo = get('geo');
   if (geoEl) geoEl.textContent = geo ? 'Parcel ID: ' + geo : '';
 
-  set('f-geo',   geo);
-  set('f-owner', own);
+  // ── Property Information ──
+  set('f-geo',   get('geo'));
+  set('f-owner', get('own'));
 
   var mailEl = document.getElementById('f-mail');
   var ad1 = get('ad1'), cty = get('cty'), pst = get('pst'), zip = get('zip');
@@ -302,154 +309,33 @@
   var acr = get('acr');
   document.getElementById('f-acres').textContent = acr ? acr + ' acres' : '—';
 
+  // ── Development Regulations ──
   var zon = get('zon'), zab = get('zab');
   set('f-zoning', zon ? (zab ? zon + '  (' + zab + ')' : zon) : null);
-
   var lu = get('lu'), lab = get('lab');
   set('f-landuse', lu ? (lab ? lu + '  (' + lab + ')' : lu) : null);
-
   set('f-uga',       get('uga'));
   set('f-shoreline', get('sho'));
-
   var fr = get('fr'), fz = get('fz');
   set('f-flood', fr ? (fz ? fr + ',  ' + fz : fr) : (fz || null));
   set('f-millcreek', get('mc'));
 
-  var chr = get('chr'), cmr = get('cmr'), cwi = get('cwi'), chk = get('chk');
-  var cso = get('cso'), csl = get('csl'), cwe = get('cwe'), cli = get('cli');
-  var crp = get('crp');
+  // ── Critical Areas ──
+  setCA('f-chr', get('chr')); setCA('f-cmr', get('cmr'));
+  setCA('f-cwi', get('cwi')); setCA('f-chk', get('chk'));
+  setCA('f-cso', get('cso')); setCA('f-csl', get('csl'));
+  setCA('f-cwe', get('cwe')); setCA('f-cli', get('cli'));
+  set('f-crp', get('crp'));
 
-  setCA('f-chr', chr); setCA('f-cmr', cmr);
-  setCA('f-cwi', cwi); setCA('f-chk', chk);
-  setCA('f-cso', cso); setCA('f-csl', csl);
-  setCA('f-cwe', cwe); setCA('f-cli', cli);
-  set('f-crp', crp);
-
-  // ── Print function — opens new window and writes full document into it ──
-  function printReport() {
-    var mailDisplay = ad1 && line2 ? ad1 + ', ' + line2 : (ad1 || line2 || '—');
-    var zoningDisplay = zon ? (zab ? zon + '  (' + zab + ')' : zon) : '—';
-    var luDisplay = lu ? (lab ? lu + '  (' + lab + ')' : lu) : '—';
-    var floodDisplay = fr ? (fz ? fr + ',  ' + fz : fr) : (fz || '—');
-
-    function caRow(label, val) {
-      var color = caColor(val);
-      return '<tr><td style="color:#6b7280;padding:5px 12px;font-size:11px;width:68%;border-bottom:1px solid #eef0f4;">' + label + '</td>' +
-             '<td style="font-weight:700;padding:5px 12px;font-size:11px;color:' + color + ';border-bottom:1px solid #eef0f4;">' + (val || '—') + '</td></tr>';
-    }
-    function dRow(label, val) {
-      return '<tr><td style="color:#6b7280;padding:5px 12px;font-size:11px;width:44%;border-bottom:1px solid #eef0f4;">' + label + '</td>' +
-             '<td style="font-weight:600;padding:5px 12px;font-size:11px;color:#1a1f2e;border-bottom:1px solid #eef0f4;">' + (val || '—') + '</td></tr>';
-    }
-    function secHead(title) {
-      return '<tr><td colspan="2" style="background:#1a3a6b;color:#fff;padding:5px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;">' + title + '</td></tr>';
-    }
-
-    var win = window.open('', '_blank');
-    win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8">' +
-      '<title>Walla Walla County – Parcel Report</title>' +
-      '<style>' +
-        'body{font-family:Segoe UI,Arial,sans-serif;margin:0;padding:0;background:#fff;color:#1a1f2e;}' +
-        'table{width:100%;border-collapse:collapse;}' +
-        '@media print{body{font-size:10px;} .no-print{display:none!important;}}' +
-      '</style></head><body>' +
-
-      // Header
-      '<div style="background:#1a3a6b;color:#fff;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:4px solid #c8a84b;-webkit-print-color-adjust:exact;print-color-adjust:exact;">' +
-        '<div style="display:flex;align-items:center;gap:12px;">' +
-          '<img src="https://jobs.wsac.org/wp-content/uploads/job-manager-uploads/company_logo/2022/03/Walla-Walla-County-Seal-147x150.jpg" style="width:44px;height:44px;object-fit:contain;border-radius:50%;" />' +
-          '<div>' +
-            '<div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;opacity:.7;">Walla Walla County</div>' +
-            '<div style="font-size:15px;font-weight:700;">Community Development</div>' +
-            '<div style="font-size:10px;opacity:.55;margin-top:2px;">Parcel Information Report &nbsp;·&nbsp; Generated ' + dateStr + '</div>' +
-          '</div>' +
-        '</div>' +
-      '</div>' +
-
-      // Situs bar
-      '<div style="background:#fff;border-bottom:1px solid #d1d5de;padding:8px 24px;display:flex;align-items:center;justify-content:space-between;">' +
-        '<div>' +
-          '<div style="font-size:16px;font-weight:700;color:#1a3a6b;">' + (sit || '—') + '</div>' +
-          '<div style="font-size:11px;color:#6b7280;margin-top:2px;">Owner: ' + (own || '—') + '</div>' +
-        '</div>' +
-        '<div style="font-family:monospace;font-size:10px;color:#9ca3af;background:#f3f4f6;padding:3px 10px;border-radius:12px;">Parcel ID: ' + (geo || '—') + '</div>' +
-      '</div>' +
-
-      // Body
-      '<div style="max-width:860px;margin:16px auto;padding:0 20px;">' +
-
-        // Two column
-        '<table style="width:100%;margin-bottom:14px;"><tr>' +
-          '<td style="width:50%;vertical-align:top;padding-right:7px;">' +
-            '<table style="width:100%;border:1px solid #d1d5de;border-radius:7px;overflow:hidden;margin-bottom:14px;">' +
-              secHead('Property Information') +
-              dRow('Parcel Number', geo) +
-              dRow('Owner', own) +
-              dRow('Mailing Address', mailDisplay) +
-              dRow('Legal Description', get('leg')) +
-              dRow('Acreage', acr ? acr + ' acres' : '') +
-            '</table>' +
-          '</td>' +
-          '<td style="width:50%;vertical-align:top;padding-left:7px;">' +
-            '<table style="width:100%;border:1px solid #d1d5de;border-radius:7px;overflow:hidden;margin-bottom:14px;">' +
-              secHead('Development Regulations') +
-              dRow('Zoning', zoningDisplay) +
-              dRow('Land Use', luDisplay) +
-              dRow('UGA Designation', get('uga')) +
-              dRow('Shoreline Jurisdiction', get('sho')) +
-              dRow('Flood Risk', floodDisplay) +
-              dRow('Mill Creek Fire District', get('mc')) +
-            '</table>' +
-          '</td>' +
-        '</tr></table>' +
-
-        // Critical areas
-        '<table style="width:100%;border:1px solid #d1d5de;border-radius:7px;overflow:hidden;margin-bottom:14px;">' +
-          '<tr><td colspan="2" style="background:#1a3a6b;color:#fff;padding:5px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;-webkit-print-color-adjust:exact;print-color-adjust:exact;">Critical Areas</td></tr>' +
-          '<tr>' +
-            '<td style="width:50%;vertical-align:top;padding:0;border-right:1px solid #eef0f4;">' +
-              '<table style="width:100%;">' +
-                caRow('CARA High Recharge Vulnerability', chr) +
-                caRow('Priority Habitat – Winter Raptor', cwi) +
-                caRow('Priority Habitat – Songbird', cso) +
-                caRow('Wetlands', cwe) +
-                caRow('Riparian Buffer', crp) +
-              '</table>' +
-            '</td>' +
-            '<td style="width:50%;vertical-align:top;padding:0;">' +
-              '<table style="width:100%;">' +
-                caRow('CARA Moderate Recharge Vulnerability', cmr) +
-                caRow('Priority Habitat – Ferruginous Hawk', chk) +
-                caRow('Slope / Erosion Hazard', csl) +
-                caRow('Liquefaction Hazard', cli) +
-              '</table>' +
-            '</td>' +
-          '</tr>' +
-        '</table>' +
-
-        // Disclaimer
-        '<div style="border:1px solid #c8a84b;background:#fdfbf3;border-radius:7px;padding:10px 14px;font-size:10.5px;color:#5c4a1a;line-height:1.65;">' +
-          '<strong style="display:block;font-size:10px;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;color:#9a7a1a;">Disclaimer</strong>' +
-          'This report is for reference purposes only. GIS data is continuously updated and does not constitute an official county determination. Field verification and consultation with Walla Walla County planning staff is recommended prior to any permitting, development, or legal action.' +
-        '</div>' +
-
-      '</div>' +
-
-      // Footer
-      '<div style="max-width:860px;margin:10px auto;padding:8px 20px;font-size:10px;color:#9ca3af;border-top:1px solid #d1d5de;display:flex;justify-content:space-between;">' +
-        '<span>Walla Walla County Community Development Department &nbsp;·&nbsp; GIS Division</span>' +
-        '<span>Generated: ' + dateStr + '</span>' +
-      '</div>' +
-
-      '<script>' +
-        'var imgs = document.querySelectorAll("img");' +
-        'var loaded = 0;' +
-        'function tryPrint() { loaded++; if (loaded >= imgs.length) { setTimeout(function(){ window.print(); }, 400); } }' +
-        'if (imgs.length === 0) { setTimeout(function(){ window.print(); }, 400); }' +
-        'else { imgs.forEach(function(img){ if (img.complete){ tryPrint(); } else { img.onload = tryPrint; img.onerror = tryPrint; } }); }' +
-      '<\/script>' +
-      '</body></html>');
-    win.document.close();
+  // ── Show correct button based on context ──
+  // If print=1 is in the URL we are on the standalone page — show Print button
+  // Otherwise we are embedded in Dashboard — show Open Full Report button
+  if (p.get('print') === '1') {
+    document.getElementById('btn-newtab').style.display = 'none';
+    document.getElementById('btn-print').style.display  = 'flex';
+  } else {
+    document.getElementById('btn-newtab').style.display = 'flex';
+    document.getElementById('btn-print').style.display  = 'none';
   }
 </script>
 
