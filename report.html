@@ -186,7 +186,7 @@
 <!-- ── Header ── -->
 <div class="header">
   <div class="header-left">
-    <div class="header-seal">⚖</div>
+    <div class="header-seal"><img src="https://jobs.wsac.org/wp-content/uploads/job-manager-uploads/company_logo/2022/03/Walla-Walla-County-Seal-147x150.jpg" alt="Walla Walla County Seal" style="width:44px;height:45px;object-fit:contain;border-radius:50%;"></div>
     <div>
       <div class="header-agency">Walla Walla County</div>
       <div class="header-title">Community Development</div>
@@ -219,6 +219,7 @@
       <div class="section">
         <div class="section-head"><span class="section-head-icon">📋</span>Property Information</div>
         <table class="dtable">
+          <tr><td>Parcel Number</td><td class="val-blue" id="f-geo">—</td></tr>
           <tr><td>Owner</td><td class="val-blue" id="f-owner">—</td></tr>
           <tr><td>Mailing Address</td><td id="f-mail">—</td></tr>
           <tr><td>Legal Description</td><td id="f-legal">—</td></tr>
@@ -359,6 +360,7 @@
   if (geoEl) geoEl.textContent = geo ? 'Parcel ID: ' + geo : '';
 
   // ── Property Information ──
+  set('f-geo',   get('geo'));
   set('f-owner', get('own'));
 
   // Mailing address — combine address + city/state/zip
