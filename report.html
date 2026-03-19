@@ -160,13 +160,12 @@
     </div>
   </div>
 
-  <!-- Always visible buttons -->
   <div style="display:flex;gap:8px;">
-    <button class="btn-print" onclick="window.open(window.location.href.split('&print')[0], '_blank');">
+    <button class="btn-print" onclick="openReportView();">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       View Report
     </button>
-    <button class="btn-print" onclick="printReport();">
+    <button class="btn-print" onclick="openPrintView();">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       Print / Save PDF
     </button>
@@ -265,21 +264,65 @@
   function setCA(id, val) {
     var el = document.getElementById(id);
     if (!el) return;
-    if (!val) { el.textContent = '—'; return; }
+    if (!val) {
+      el.textContent = '—';
+      return;
+    }
     el.textContent = val;
     var lower = val.toLowerCase();
+    el.classList.remove('ca-yes', 'ca-no', 'ca-val-text');
     if (lower === 'yes') el.classList.add('ca-yes');
     else if (lower === 'no') el.classList.add('ca-no');
     else el.classList.add('ca-val-text');
   }
 
-  // ── Dates ──
+  function openReportView() {
+    var url = new URL(window.location.href);
+    url.searchParams.delete('autoprint');
+    window.open(url.toString(), '_blank', 'noopener');
+  }
+
+  function openPrintView() {
+    var url = new URL(window.location.href);
+    url.searchParams.set('autoprint', '1');
+    window.open(url.toString(), '_blank', 'noopener');
+  }
+
+  function waitForImagesThenPrint() {
+    var imgs = document.querySelectorAll('img');
+    if (imgs.length === 0) {
+      setTimeout(function () {
+        window.print();
+      }, 800);
+      return;
+    }
+
+    var loaded = 0;
+    function done() {
+      loaded++;
+      if (loaded >= imgs.length) {
+        setTimeout(function () {
+          window.print();
+        }, 800);
+      }
+    }
+
+    imgs.forEach(function (img) {
+      if (img.complete) done();
+      else {
+        img.onload = done;
+        img.onerror = done;
+      }
+    });
+  }
+
+  // Dates
   var now = new Date();
   var dateStr = now.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
   document.getElementById('report-date').textContent = 'Generated ' + dateStr;
   document.getElementById('footer-date').textContent = 'Generated: ' + dateStr;
 
-  // ── Header ──
+  // Header
   set('hdr-situs', get('sit'));
   var ownerEl = document.getElementById('hdr-owner');
   var own = get('own');
@@ -288,8 +331,8 @@
   var geo = get('geo');
   if (geoEl) geoEl.textContent = geo ? 'Parcel ID: ' + geo : '';
 
-  // ── Property Information ──
-  set('f-geo',   get('geo'));
+  // Property Information
+  set('f-geo', get('geo'));
   set('f-owner', get('own'));
 
   var mailEl = document.getElementById('f-mail');
@@ -299,153 +342,45 @@
   if (pst) line2 += (line2 ? ', ' : '') + pst;
   if (zip) line2 += (line2 ? ' ' : '') + zip;
   if (mailEl) {
-    if (ad1 && line2)    mailEl.innerHTML = ad1 + '<br>' + line2;
-    else if (ad1)        mailEl.textContent = ad1;
-    else if (line2)      mailEl.textContent = line2;
-    else                 mailEl.textContent = '—';
+    if (ad1 && line2) mailEl.innerHTML = ad1 + '<br>' + line2;
+    else if (ad1) mailEl.textContent = ad1;
+    else if (line2) mailEl.textContent = line2;
+    else mailEl.textContent = '—';
   }
 
   set('f-legal', get('leg'));
   var acr = get('acr');
   document.getElementById('f-acres').textContent = acr ? acr + ' acres' : '—';
 
-  // ── Development Regulations ──
+  // Development Regulations
   var zon = get('zon'), zab = get('zab');
   set('f-zoning', zon ? (zab ? zon + '  (' + zab + ')' : zon) : null);
   var lu = get('lu'), lab = get('lab');
   set('f-landuse', lu ? (lab ? lu + '  (' + lab + ')' : lu) : null);
-  set('f-uga',       get('uga'));
+  set('f-uga', get('uga'));
   set('f-shoreline', get('sho'));
   var fr = get('fr'), fz = get('fz');
   set('f-flood', fr ? (fz ? fr + ',  ' + fz : fr) : (fz || null));
   set('f-millcreek', get('mc'));
 
-  // ── Critical Areas ──
-  setCA('f-chr', get('chr')); setCA('f-cmr', get('cmr'));
-  setCA('f-cwi', get('cwi')); setCA('f-chk', get('chk'));
-  setCA('f-cso', get('cso')); setCA('f-csl', get('csl'));
-  setCA('f-cwe', get('cwe')); setCA('f-cli', get('cli'));
+  // Critical Areas
+  setCA('f-chr', get('chr'));
+  setCA('f-cmr', get('cmr'));
+  setCA('f-cwi', get('cwi'));
+  setCA('f-chk', get('chk'));
+  setCA('f-cso', get('cso'));
+  setCA('f-csl', get('csl'));
+  setCA('f-cwe', get('cwe'));
+  setCA('f-cli', get('cli'));
   set('f-crp', get('crp'));
 
-  // ── Print function — opens new window, writes full document, auto-prints ──
-  function printReport() {
-    var mailDisplay = ad1 && line2 ? ad1 + ', ' + line2 : (ad1 || line2 || '—');
-    var zoningDisplay = zon ? (zab ? zon + '  (' + zab + ')' : zon) : '—';
-    var luDisplay = lu ? (lab ? lu + '  (' + lab + ')' : lu) : '—';
-    var fr = get('fr'), fz = get('fz');
-    var floodDisplay = fr ? (fz ? fr + ',  ' + fz : fr) : (fz || '—');
-
-    function caColor(val) {
-      var lower = (val || '').toLowerCase();
-      if (lower === 'yes') return '#dc2626';
-      if (lower === 'no')  return '#9ca3af';
-      return '#1a3a6b';
+  // Auto-print only when opened as a top-level page with ?autoprint=1
+  window.addEventListener('load', function () {
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('autoprint') === '1') {
+      waitForImagesThenPrint();
     }
-    function dRow(label, val) {
-      return '<tr><td style="color:#6b7280;padding:5px 12px;font-size:11px;width:44%;border-bottom:1px solid #eef0f4;">' + label + '</td>' +
-             '<td style="font-weight:600;padding:5px 12px;font-size:11px;color:#1a1f2e;border-bottom:1px solid #eef0f4;">' + (val || '—') + '</td></tr>';
-    }
-    function caRow(label, val) {
-      return '<tr><td style="color:#6b7280;padding:5px 12px;font-size:11px;width:68%;border-bottom:1px solid #eef0f4;">' + label + '</td>' +
-             '<td style="font-weight:700;padding:5px 12px;font-size:11px;color:' + caColor(val) + ';border-bottom:1px solid #eef0f4;">' + (val || '—') + '</td></tr>';
-    }
-    function secHead(title) {
-      return '<tr><td colspan="2" style="background:#1a3a6b;color:#fff;padding:5px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;-webkit-print-color-adjust:exact;print-color-adjust:exact;">' + title + '</td></tr>';
-    }
-
-    var win = window.open('', '_blank');
-    win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8">' +
-      '<title>Walla Walla County – Parcel Report</title>' +
-      '<style>body{font-family:Segoe UI,Arial,sans-serif;margin:0;padding:0;background:#fff;color:#1a1f2e;} table{width:100%;border-collapse:collapse;}</style>' +
-      '</head><body>' +
-
-      '<div style="background:#1a3a6b;color:#fff;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:4px solid #c8a84b;-webkit-print-color-adjust:exact;print-color-adjust:exact;">' +
-        '<div style="display:flex;align-items:center;gap:12px;">' +
-          '<img src="https://jobs.wsac.org/wp-content/uploads/job-manager-uploads/company_logo/2022/03/Walla-Walla-County-Seal-147x150.jpg" style="width:44px;height:44px;object-fit:contain;border-radius:50%;" />' +
-          '<div>' +
-            '<div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;opacity:.7;">Walla Walla County</div>' +
-            '<div style="font-size:15px;font-weight:700;">Community Development</div>' +
-            '<div style="font-size:10px;opacity:.55;margin-top:2px;">Parcel Information Report &nbsp;·&nbsp; Generated ' + dateStr + '</div>' +
-          '</div>' +
-        '</div>' +
-      '</div>' +
-
-      '<div style="background:#fff;border-bottom:1px solid #d1d5de;padding:8px 24px;display:flex;align-items:center;justify-content:space-between;">' +
-        '<div>' +
-          '<div style="font-size:16px;font-weight:700;color:#1a3a6b;">' + (get('sit') || '—') + '</div>' +
-          '<div style="font-size:11px;color:#6b7280;margin-top:2px;">Owner: ' + (get('own') || '—') + '</div>' +
-        '</div>' +
-        '<div style="font-family:monospace;font-size:10px;color:#9ca3af;background:#f3f4f6;padding:3px 10px;border-radius:12px;">Parcel ID: ' + (get('geo') || '—') + '</div>' +
-      '</div>' +
-
-      '<div style="max-width:860px;margin:16px auto;padding:0 20px;">' +
-        '<table style="margin-bottom:14px;"><tr>' +
-          '<td style="width:50%;vertical-align:top;padding-right:7px;">' +
-            '<table style="border:1px solid #d1d5de;border-radius:7px;overflow:hidden;margin-bottom:14px;">' +
-              secHead('Property Information') +
-              dRow('Parcel Number', get('geo')) +
-              dRow('Owner', get('own')) +
-              dRow('Mailing Address', mailDisplay) +
-              dRow('Legal Description', get('leg')) +
-              dRow('Acreage', get('acr') ? get('acr') + ' acres' : '') +
-            '</table>' +
-          '</td>' +
-          '<td style="width:50%;vertical-align:top;padding-left:7px;">' +
-            '<table style="border:1px solid #d1d5de;border-radius:7px;overflow:hidden;margin-bottom:14px;">' +
-              secHead('Development Regulations') +
-              dRow('Zoning', zoningDisplay) +
-              dRow('Land Use', luDisplay) +
-              dRow('UGA Designation', get('uga')) +
-              dRow('Shoreline Jurisdiction', get('sho')) +
-              dRow('Flood Risk', floodDisplay) +
-              dRow('Mill Creek Fire District', get('mc')) +
-            '</table>' +
-          '</td>' +
-        '</tr></table>' +
-
-        '<table style="border:1px solid #d1d5de;border-radius:7px;overflow:hidden;margin-bottom:14px;">' +
-          '<tr><td colspan="2" style="background:#1a3a6b;color:#fff;padding:5px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;-webkit-print-color-adjust:exact;print-color-adjust:exact;">Critical Areas</td></tr>' +
-          '<tr>' +
-            '<td style="width:50%;vertical-align:top;padding:0;border-right:1px solid #eef0f4;">' +
-              '<table>' +
-                caRow('CARA High Recharge Vulnerability', get('chr')) +
-                caRow('Priority Habitat – Winter Raptor', get('cwi')) +
-                caRow('Priority Habitat – Songbird', get('cso')) +
-                caRow('Wetlands', get('cwe')) +
-                caRow('Riparian Buffer', get('crp')) +
-              '</table>' +
-            '</td>' +
-            '<td style="width:50%;vertical-align:top;padding:0;">' +
-              '<table>' +
-                caRow('CARA Moderate Recharge Vulnerability', get('cmr')) +
-                caRow('Priority Habitat – Ferruginous Hawk', get('chk')) +
-                caRow('Slope / Erosion Hazard', get('csl')) +
-                caRow('Liquefaction Hazard', get('cli')) +
-              '</table>' +
-            '</td>' +
-          '</tr>' +
-        '</table>' +
-
-        '<div style="border:1px solid #c8a84b;background:#fdfbf3;border-radius:7px;padding:10px 14px;font-size:10.5px;color:#5c4a1a;line-height:1.65;">' +
-          '<strong style="display:block;font-size:10px;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;color:#9a7a1a;">Disclaimer</strong>' +
-          'This report is for reference purposes only. GIS data is continuously updated and does not constitute an official county determination. Field verification and consultation with Walla Walla County planning staff is recommended prior to any permitting, development, or legal action.' +
-        '</div>' +
-      '</div>' +
-
-      '<div style="max-width:860px;margin:10px auto;padding:8px 20px;font-size:10px;color:#9ca3af;border-top:1px solid #d1d5de;display:flex;justify-content:space-between;">' +
-        '<span>Walla Walla County Community Development Department &nbsp;·&nbsp; GIS Division</span>' +
-        '<span>Generated: ' + dateStr + '</span>' +
-      '</div>' +
-
-      '<script>' +
-        'var imgs=document.querySelectorAll("img");var loaded=0;' +
-        'function tryPrint(){loaded++;if(loaded>=imgs.length){setTimeout(function(){window.print();},400);}}' +
-        'if(imgs.length===0){setTimeout(function(){window.print();},400);}' +
-        'else{imgs.forEach(function(img){if(img.complete){tryPrint();}else{img.onload=tryPrint;img.onerror=tryPrint;}});}' +
-      '<\/script>' +
-      '</body></html>');
-    win.document.close();
-  }
+  });
 </script>
 
 </body>
