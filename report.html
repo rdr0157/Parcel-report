@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -164,29 +165,29 @@
       .footer    { display: none !important; }
       .btn-view  { display: none !important; }
 
-      /* Tighten layout for single page */
-      body { background: #fff; padding: 0; margin: 0; font-size: 10px; }
-      .page { margin: 0; padding: 4px 10px; max-width: 100%; }
+```
+  /* Tighten layout for single page */
+  body { background: #fff; padding: 0; margin: 0; font-size: 10px; }
+  .page { margin: 0; padding: 4px 10px; max-width: 100%; }
 
-      /* Print header — compact agency info at top of printed page */
-      .print-header { display: block !important; }
+  /* Two columns side by side on print */
+  .two-col { display: table; width: 100%; border-spacing: 8px 0; margin: 0 -8px 8px; }
+  .two-col-cell { display: table-cell; width: 50%; vertical-align: top; }
+  .two-col-cell .section { margin-bottom: 8px; }
 
-      /* Two columns side by side on print */
-      .two-col { display: table; width: 100%; border-spacing: 8px 0; margin: 0 -8px 8px; }
-      .two-col-cell { display: table-cell; width: 50%; vertical-align: top; }
-      .two-col-cell .section { margin-bottom: 8px; }
+  /* Tighter section spacing */
+  .section { break-inside: avoid; margin-bottom: 8px; border-radius: 4px; }
+  .section-head { padding: 4px 10px; font-size: 9px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .dtable td { padding: 3px 10px; font-size: 10px; }
+  .ca-table td { padding: 4px 10px; font-size: 10px; }
+  .ca-label { font-size: 9px; }
 
-      /* Tighter section spacing */
-      .section { break-inside: avoid; margin-bottom: 8px; border-radius: 4px; }
-      .section-head { padding: 4px 10px; font-size: 9px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .dtable td { padding: 3px 10px; font-size: 10px; }
-      .ca-table td { padding: 4px 10px; font-size: 10px; }
-      .ca-label { font-size: 9px; }
+  /* Disclaimer */
+  .disclaimer { break-inside: avoid; padding: 7px 12px; font-size: 10px; margin-bottom: 6px; }
+  .disclaimer strong { font-size: 9px; margin-bottom: 3px; }
+}
+```
 
-      /* Disclaimer */
-      .disclaimer { break-inside: avoid; padding: 7px 12px; font-size: 10px; margin-bottom: 6px; }
-      .disclaimer strong { font-size: 9px; margin-bottom: 3px; }
-    }
   </style>
 </head>
 <body>
@@ -203,9 +204,13 @@
     </div>
   </div>
   <div style="display:flex;gap:8px;">
+    <button class="btn-view" onclick="window.open(window.location.href, '_blank');">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      View Report
+    </button>
     <button class="btn-view" onclick="window.print();">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-      Print / Save Report
+      Print / Save PDF
     </button>
   </div>
 </div>
@@ -218,73 +223,62 @@
   <div class="situsbar-id" id="hdr-geo"></div>
 </div>
 
-<!-- Print-only compact header -->
-<div class="print-header" style="padding:8px 10px 6px;border-bottom:3px solid #c8a84b;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;">
-  <div style="display:flex;align-items:center;gap:10px;">
-    <img src="https://jobs.wsac.org/wp-content/uploads/job-manager-uploads/company_logo/2022/03/Walla-Walla-County-Seal-147x150.jpg" style="width:36px;height:36px;object-fit:contain;">
-    <div>
-      <div style="font-size:13px;font-weight:700;color:#1a3a6b;">Walla Walla County Community Development</div>
-      <div style="font-size:9px;color:#6b7280;margin-top:1px;">310 W. Poplar Street, Suite 200 &nbsp;·&nbsp; Walla Walla, WA 99362 &nbsp;·&nbsp; 509-524-2610 &nbsp;·&nbsp; commdev@wwcowa.gov</div>
-    </div>
-  </div>
-  <div style="text-align:right;">
-    <div style="font-size:11px;font-weight:700;color:#1a3a6b;" id="ph-situs"></div>
-    <div style="font-size:9px;color:#6b7280;margin-top:1px;" id="ph-meta"></div>
-  </div>
-</div>
-
 <div class="page">
   <div class="two-col">
     <div class="two-col-cell">
 
-      <!-- Property Information -->
-      <div class="section">
-        <div class="section-head">
-          <div class="section-head-left"><span class="section-head-icon">📋</span>Property Information</div>
-        </div>
-        <table class="dtable">
-          <tr><td>Parcel Number</td><td class="val-blue" id="f-geo">—</td></tr>
-          <tr><td>Owner</td><td class="val-blue" id="f-owner">—</td></tr>
-          <tr><td>Mailing Address</td><td id="f-mail">—</td></tr>
-          <tr><td>Legal Description</td><td id="f-legal">—</td></tr>
-          <tr><td>Area (ac)</td><td id="f-acres">—</td></tr>
-          <tr><td>Assessor's Website</td><td id="f-link">—</td></tr>
-        </table>
-      </div>
-
+```
+  <!-- Property Information -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left"><span class="section-head-icon">📋</span>Property Information</div>
     </div>
-    <div class="two-col-cell">
+    <table class="dtable">
+      <tr><td>Parcel Number</td><td class="val-blue" id="f-geo">—</td></tr>
+      <tr><td>Owner</td><td class="val-blue" id="f-owner">—</td></tr>
+      <tr><td>Mailing Address</td><td id="f-mail">—</td></tr>
+      <tr><td>Legal Description</td><td id="f-legal">—</td></tr>
+      <tr><td>Area (ac)</td><td id="f-acres">—</td></tr>
+      <tr><td>Assessor's Website</td><td id="f-link">—</td></tr>
+    </table>
+  </div>
 
-      <!-- Development Regulations -->
-      <div class="section">
-        <div class="section-head">
-          <div class="section-head-left"><span class="section-head-icon">📐</span>Development Regulations</div>
-        </div>
-        <table class="dtable">
-          <tr><td>Zoning</td><td class="val-blue" id="f-zoning">—</td></tr>
-          <tr><td>Land Use</td><td id="f-landuse">—</td></tr>
-          <tr><td>UGA Designation</td><td id="f-uga">—</td></tr>
-          <tr><td>Shoreline Jurisdiction</td><td id="f-shoreline">—</td></tr>
-          <tr><td>Mill Creek Fire District</td><td id="f-millcreek">—</td></tr>
-          <tr>
-            <td><a class="setback-link" href="https://library.municode.com/wa/walla_walla_county/codes/code_of_ordinances?nodeId=TIT17ZO_CH17.18DESTENDI" target="_blank">Front Setback &#8599;</a></td>
-            <td id="f-sfr">—</td>
-          </tr>
-          <tr>
-            <td><a class="setback-link" href="https://library.municode.com/wa/walla_walla_county/codes/code_of_ordinances?nodeId=TIT17ZO_CH17.18DESTENDI" target="_blank">Side Setback &#8599;</a></td>
-            <td id="f-ssi">—</td>
-          </tr>
-          <tr>
-            <td><a class="setback-link" href="https://library.municode.com/wa/walla_walla_county/codes/code_of_ordinances?nodeId=TIT17ZO_CH17.18DESTENDI" target="_blank">Rear Setback &#8599;</a></td>
-            <td id="f-sre">—</td>
-          </tr>
-        </table>
-      </div>
+</div>
+<div class="two-col-cell">
 
+  <!-- Development Regulations -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left"><span class="section-head-icon">📐</span>Development Regulations</div>
     </div>
+    <table class="dtable">
+      <tr><td>Zoning</td><td class="val-blue" id="f-zoning">—</td></tr>
+      <tr><td>Land Use</td><td id="f-landuse">—</td></tr>
+      <tr><td>UGA Designation</td><td id="f-uga">—</td></tr>
+      <tr><td>Shoreline Jurisdiction</td><td id="f-shoreline">—</td></tr>
+      <tr><td>Mill Creek Fire District</td><td id="f-millcreek">—</td></tr>
+      <tr>
+        <td><a class="setback-link" href="https://library.municode.com/wa/walla_walla_county/codes/code_of_ordinances?nodeId=TIT17ZO_CH17.18DESTENDI" target="_blank">Front Setback &#8599;</a></td>
+        <td id="f-sfr">—</td>
+      </tr>
+      <tr>
+        <td><a class="setback-link" href="https://library.municode.com/wa/walla_walla_county/codes/code_of_ordinances?nodeId=TIT17ZO_CH17.18DESTENDI" target="_blank">Side Setback &#8599;</a></td>
+        <td id="f-ssi">—</td>
+      </tr>
+      <tr>
+        <td><a class="setback-link" href="https://library.municode.com/wa/walla_walla_county/codes/code_of_ordinances?nodeId=TIT17ZO_CH17.18DESTENDI" target="_blank">Rear Setback &#8599;</a></td>
+        <td id="f-sre">—</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+```
+
   </div>
 
   <!-- Critical Areas -->
+
   <div class="section">
     <div class="section-head">
       <div class="section-head-left"><span class="section-head-icon">⚠</span>Critical Areas</div>
@@ -373,12 +367,6 @@
   var geoEl = document.getElementById('hdr-geo');
   var geo = get('geo');
   if (geoEl) geoEl.textContent = geo ? 'Parcel ID: ' + geo : '';
-
-  // ── Print header ──
-  var phSitus = document.getElementById('ph-situs');
-  var phMeta  = document.getElementById('ph-meta');
-  if (phSitus) phSitus.textContent = get('sit') || '—';
-  if (phMeta)  phMeta.textContent  = (geo ? 'Parcel ID: ' + geo : '') + (own ? '  ·  Owner: ' + own : '') + '  ·  ' + dateStr;
 
   // ── Property Information ──
   set('f-geo',   get('geo'));
