@@ -109,8 +109,8 @@
     .dtable tr:last-child { border-bottom: none; }
     .dtable tr:nth-child(even) { background: #fafbfd; }
     .dtable td { padding: 6px 14px; font-size: 12.5px; vertical-align: top; line-height: 1.4; }
-    .dtable td:first-child { color: #6b7280; width: 44%; white-space: nowrap; }
-    .dtable td:last-child  { font-weight: 500; color: #1a1f2e; }
+    .dtable td:first-child { color: #6b7280; width: 44%; white-space: normal; word-break: break-word; }
+    .dtable td:last-child  { font-weight: 500; color: #1a1f2e; word-break: break-word; }
     .val-blue { color: #1a3a6b; }
     .val-link { color: #1a3a6b; text-decoration: none; font-weight: 500; }
     .val-link:hover { text-decoration: underline; }
@@ -159,14 +159,17 @@
   /* Print-only header — hidden on screen */
   .print-header { display: none; }
   @media print {
-      /* Hide only buttons, situsbar and footer */
-      .situsbar  { display: none !important; }
+      /* Hide only buttons and footer */
       .footer    { display: none !important; }
       .btn-view  { display: none !important; }
 
 ```
-  /* Keep header but tighten it */
+  /* Keep header and situsbar on print */
   .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px 20px; }
+  .situsbar { padding: 6px 20px; border-bottom: 1px solid #d1d5de; }
+  .situsbar-addr { font-size: 13px; }
+  .situsbar-owner { font-size: 10px; }
+  .situsbar-id { font-size: 9px; }
 
   /* Tighten layout for single page */
   body { background: #fff; padding: 0; margin: 0; font-size: 10px; }
