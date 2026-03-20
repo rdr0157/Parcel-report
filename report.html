@@ -122,9 +122,7 @@
     .ca-table tr:last-child td { border-bottom: none; }
     .ca-table td:first-child { border-right: 1px solid #eef0f4; }
     .ca-label { color: #6b7280; font-size: 11px; margin-bottom: 2px; }
-    .ca-val   { font-weight: 600; }
-    .ca-yes   { color: #dc2626; }
-    .ca-no    { color: #6b7280; font-weight: 400; }
+    .ca-val   { font-weight: 500; color: #1a1f2e; }
     .ca-val-text { color: #1a3a6b; }
     .disclaimer {
       border: 1px solid #c8a84b;
@@ -417,12 +415,12 @@
 
   // ── Critical Areas ──
   var fr = get('fr'), fz = get('fz');
-  setCA('f-flood', fr);
+  set('f-flood', fr);
   set('f-fz', fz);
-  setCA('f-chr', get('chr')); setCA('f-cmr', get('cmr'));
-  setCA('f-cwi', get('cwi')); setCA('f-chk', get('chk'));
-  setCA('f-cso', get('cso')); setCA('f-csl', get('csl'));
-  setCA('f-cwe', get('cwe')); setCA('f-cli', get('cli'));
+  set('f-chr', get('chr')); set('f-cmr', get('cmr'));
+  set('f-cwi', get('cwi')); set('f-chk', get('chk'));
+  set('f-cso', get('cso')); set('f-csl', get('csl'));
+  set('f-cwe', get('cwe')); set('f-cli', get('cli'));
   set('f-crp', get('crp'));
 
   // ── Show correct button based on context ──
