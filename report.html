@@ -185,10 +185,12 @@
       <div class="header-sub">Parcel Information Report &nbsp;·&nbsp; <span id="report-date"></span></div>
     </div>
   </div>
-  <button class="btn-view" onclick="window.open(window.location.href, '_blank');">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-    View Report
-  </button>
+  <div style="display:flex;gap:8px;">
+    <button class="btn-view" onclick="window.print();">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print / Save Report
+    </button>
+  </div>
 </div>
 
 <div class="situsbar">
@@ -287,7 +289,6 @@
   <div class="disclaimer">
     <strong>Disclaimer</strong>
     This report is for reference purposes only. GIS data is continuously updated and does not constitute an official county determination. Field verification and consultation with Walla Walla County planning staff is recommended prior to any permitting, development, or legal action.
-    <div class="disclaimer-print">Press Ctrl+P to Print Report</div>
   </div>
 </div>
 
@@ -362,16 +363,8 @@
   var acr = get('acr');
   document.getElementById('f-acres').textContent = acr ? acr + ' ac' : '—';
 
-  // Assessor link
-  var lnk = get('lnk');
-  var linkEl = document.getElementById('f-link');
-  if (linkEl) {
-    if (lnk) {
-      linkEl.innerHTML = '<a class="val-link" href="' + lnk + '" target="_blank">View Property Record &#8599;</a>';
-    } else {
-      linkEl.textContent = '—';
-    }
-  }
+  // Assessor link — display as plain text
+  set('f-link', get('lnk'));
 
   // ── Development Regulations ──
   var zon = get('zon'), zab = get('zab');
