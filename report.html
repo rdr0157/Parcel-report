@@ -389,7 +389,7 @@
 
   set('f-legal', get('leg'));
   var acr = get('acr');
-  document.getElementById('f-acres').textContent = acr ? parseFloat(acr).toFixed(2) + ' ac' : '—';
+  document.getElementById('f-acres').textContent = (acr && !isNaN(parseFloat(acr))) ? parseFloat(acr).toFixed(2) + ' ac' : '—';
 
   // Assessor link — construct full URL from prop_id number
   var pid = get('lnk');
@@ -398,14 +398,14 @@
     var fullUrl = 'https://propertysearch.co.walla-walla.wa.us/PropertyAccess/Property.aspx?cid=0&year=2025&prop_id=' + pid;
     linkEl.innerHTML = '<a class="val-link" href="' + fullUrl + '" target="_blank">View Property Record &#8599;</a>';
   } else {
-    linkEl.textContent = '—';
+    if (linkEl) linkEl.textContent = '—';
   }
 
   // ── Development Regulations ──
   var zon = get('zon'), zab = get('zab');
-  set('f-zoning', zon ? (zab ? zon + '  (' + zab + ')' : zon) : null);
+  set('f-zoning', (zon && zab) ? zon + '  (' + zab + ')' : (zon || null));
   var lu = get('lu'), lab = get('lab');
-  set('f-landuse', lu ? (lab ? lu + '  (' + lab + ')' : lu) : null);
+  set('f-landuse', (lu && lab) ? lu + '  (' + lab + ')' : (lu || null));
   set('f-uga',       get('uga'));
   set('f-shoreline', get('sho'));
   set('f-millcreek', get('mc'));
@@ -414,20 +414,27 @@
   set('f-sre', get('sre'));
 
   // ── Critical Areas ──
-  var fr = get('fr'), fz = get('fz');
+  var fr = get('fr') || '—';
+  var fz = get('fz') || '—';
   set('f-flood', fr);
   set('f-fz', fz);
-  set('f-chr', get('chr')); set('f-cmr', get('cmr'));
-  set('f-cwi', get('cwi')); set('f-chk', get('chk'));
-  set('f-cso', get('cso')); set('f-csl', get('csl'));
-  set('f-cwe', get('cwe')); set('f-cli', get('cli'));
-  set('f-crp', get('crp'));
+  set('f-chr', get('chr') || '—'); set('f-cmr', get('cmr') || '—');
+  set('f-cwi', get('cwi') || '—'); set('f-chk', get('chk') || '—');
+  set('f-cso', get('cso') || '—'); set('f-csl', get('csl') || '—');
+  set('f-cwe', get('cwe') || '—'); set('f-cli', get('cli') || '—');
+  set('f-crp', get('crp') || '—');
 
-  // ── Show correct button based on context ──
-  if (p.get('print') === '1') {
-    document.getElementById('btn-print').style.display = 'flex';
-  } else {
-    document.getElementById('btn-view').style.display = 'flex';
+  // ── Show correct button — always runs regardless of any errors above ──
+  try {
+    if (p.get('print') === '1') {
+      document.getElementById('btn-print').style.display = 'flex';
+    } else {
+      document.getElementById('btn-view').style.display = 'flex';
+    }
+  } catch(e) {
+    // fallback — show view button
+    var vb = document.getElementById('btn-view');
+    if (vb) vb.style.display = 'flex';
   }
 </script>
 
