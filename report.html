@@ -379,7 +379,7 @@
 
   set('f-legal', get('leg'));
   var acr = get('acr');
-  document.getElementById('f-acres').textContent = acr ? acr + ' ac' : '—';
+  document.getElementById('f-acres').textContent = acr ? parseFloat(acr).toFixed(2) + ' ac' : '—';
 
   // Assessor link — plain text
   set('f-link', get('lnk'));
