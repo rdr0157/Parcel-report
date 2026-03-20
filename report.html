@@ -393,8 +393,15 @@
   var acr = get('acr');
   document.getElementById('f-acres').textContent = acr ? parseFloat(acr).toFixed(2) + ' ac' : '—';
 
-  // Assessor link — plain text
-  set('f-link', get('lnk'));
+  // Assessor link — construct full URL from prop_id number
+  var pid = get('lnk');
+  var linkEl = document.getElementById('f-link');
+  if (linkEl && pid) {
+    var fullUrl = 'https://propertysearch.co.walla-walla.wa.us/propertyaccess/customdisplay.htm?aspxerrorpath=/PropertyAccess/Property.aspx?cid=0&year=2025&prop_id=' + pid;
+    linkEl.innerHTML = '<a class="val-link" href="' + fullUrl + '" target="_blank">View Property Record &#8599;</a>';
+  } else {
+    linkEl.textContent = '—';
+  }
 
   // ── Development Regulations ──
   var zon = get('zon'), zab = get('zab');
