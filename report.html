@@ -49,7 +49,6 @@
       gap: 7px;
       flex-shrink: 0;
       transition: background .15s;
-      text-decoration: none;
     }
     .btn-view:hover { background: #dbb94f; }
     .situsbar {
@@ -109,21 +108,25 @@
     .dtable tr { border-bottom: 1px solid #eef0f4; }
     .dtable tr:last-child { border-bottom: none; }
     .dtable tr:nth-child(even) { background: #fafbfd; }
-    .dtable td { padding: 6px 14px; font-size: 12.5px; vertical-align: top; line-height: 1.4; }
-    .dtable td:first-child { color: #6b7280; width: 44%; white-space: normal; word-break: break-word; }
-    .dtable td:last-child  { font-weight: 500; color: #1a1f2e; word-break: break-word; }
+    .dtable td { padding: 6px 14px; font-size: 12.5px; vertical-align: top; line-height: 1.4; word-break: break-word; }
+    .dtable td:first-child { color: #6b7280; width: 44%; }
+    .dtable td:last-child  { font-weight: 500; color: #1a1f2e; }
     .val-blue { color: #1a3a6b; }
     .val-link { color: #1a3a6b; text-decoration: none; font-weight: 500; }
     .val-link:hover { text-decoration: underline; }
     .setback-link { color: #1a3a6b; text-decoration: none; font-weight: 500; font-size: 12.5px; }
     .setback-link:hover { text-decoration: underline; }
+    /* Critical areas */
     .ca-table { width: 100%; border-collapse: collapse; }
-    .ca-table td { padding: 7px 14px; vertical-align: top; border-bottom: 1px solid #eef0f4; width: 50%; font-size: 12.5px; }
+    .ca-table td { padding: 7px 14px; vertical-align: top; border-bottom: 1px solid #eef0f4; width: 50%; font-size: 12.5px; word-break: break-word; }
     .ca-table tr:last-child td { border-bottom: none; }
     .ca-table td:first-child { border-right: 1px solid #eef0f4; }
     .ca-label { color: #6b7280; font-size: 11px; margin-bottom: 2px; }
-    .ca-val   { font-weight: 500; color: #1a1f2e; }
-    .ca-val-text { color: #1a3a6b; }
+    .ca-val   { font-weight: 600; }
+    .ca-yes   { color: #dc2626; }   /* red — has value / YES */
+    .ca-no    { color: #16a34a; font-weight: 400; }  /* green — NO */
+    .ca-text  { color: #1a3a6b; }   /* blue — text value */
+    /* Disclaimer */
     .disclaimer {
       border: 1px solid #c8a84b;
       background: #fdfbf3;
@@ -135,12 +138,7 @@
       line-height: 1.65;
     }
     .disclaimer strong { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 5px; color: #9a7a1a; }
-    .disclaimer-print {
-      margin-top: 8px;
-      font-size: 11px;
-      color: #9a7a1a;
-      font-weight: 600;
-    }
+    /* Footer */
     .footer {
       max-width: 900px;
       margin: 0 auto;
@@ -155,48 +153,32 @@
     }
     .footer a { color: #9ca3af; text-decoration: none; }
     .footer a:hover { text-decoration: underline; }
-  /* Print-only header — hidden on screen */
-  .print-header { display: none; }
-  @page {
-      size: letter;
-      margin: 0.4in;
-  }
-  @media print {
-      /* Hide only buttons */
+    /* Print */
+    .print-header { display: none; }
+    @page { size: letter; margin: 0.4in; }
+    @media print {
       .btn-view  { display: none !important; }
-
-```
-  /* Keep header and situsbar on print */
-  .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px 20px; }
-  .situsbar { padding: 6px 20px; border-bottom: 1px solid #d1d5de; }
-  .situsbar-addr { font-size: 13px; }
-  .situsbar-owner { font-size: 10px; }
-  .situsbar-id { font-size: 9px; }
-
-  /* Tighten layout for single page */
-  body { background: #fff; padding: 0; margin: 0; font-size: 10px; }
-  .page { margin: 0; padding: 4px 8px; max-width: 100%; }
-
-  /* Two columns side by side on print — fix alignment */
-  .two-col { display: table; width: 100%; border-collapse: separate; border-spacing: 0; margin: 0 0 6px; }
-  .two-col-cell { display: table-cell; width: 50%; vertical-align: top; padding-right: 4px; }
-  .two-col-cell + .two-col-cell { padding-right: 0; padding-left: 4px; }
-
-  /* Tighter section spacing */
-  .section { break-inside: avoid; margin-bottom: 6px; border-radius: 3px; }
-  .section-head { padding: 3px 8px; font-size: 8.5px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .dtable td { padding: 2px 8px; font-size: 9.5px; }
-  .ca-table td { padding: 3px 8px; font-size: 9.5px; }
-  .ca-label { font-size: 8.5px; margin-bottom: 1px; }
-  .ca-val { font-size: 9.5px; }
-
-  /* Disclaimer */
-  .disclaimer { break-inside: avoid; padding: 5px 10px; font-size: 9px; margin-bottom: 4px; }
-  .disclaimer strong { font-size: 8.5px; margin-bottom: 2px; }
-  .print-tip { display: none !important; }
-}
-```
-
+      .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px 20px; }
+      .situsbar { padding: 6px 20px; border-bottom: 1px solid #d1d5de; }
+      .situsbar-addr { font-size: 13px; }
+      .situsbar-owner { font-size: 10px; }
+      .situsbar-id { font-size: 9px; }
+      body { background: #fff; padding: 0; margin: 0; font-size: 10px; }
+      .page { margin: 0; padding: 4px 8px; max-width: 100%; }
+      .two-col { display: table; width: 100%; border-collapse: separate; border-spacing: 0; margin: 0 0 6px; }
+      .two-col-cell { display: table-cell; width: 50%; vertical-align: top; padding-right: 4px; }
+      .two-col-cell + .two-col-cell { padding-right: 0; padding-left: 4px; }
+      .section { break-inside: avoid; margin-bottom: 6px; border-radius: 3px; }
+      .section-head { padding: 3px 8px; font-size: 8.5px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .dtable td { padding: 2px 8px; font-size: 9.5px; }
+      .ca-table td { padding: 3px 8px; font-size: 9.5px; }
+      .ca-label { font-size: 8.5px; margin-bottom: 1px; }
+      .ca-val { font-size: 9.5px; }
+      .disclaimer { break-inside: avoid; padding: 5px 10px; font-size: 9px; margin-bottom: 4px; }
+      .disclaimer strong { font-size: 8.5px; margin-bottom: 2px; }
+      .ca-yes { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .ca-no  { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
   </style>
 </head>
 <body>
@@ -235,41 +217,44 @@
 <div class="page">
   <div class="two-col" style="font-size:0;">
     <div class="two-col-cell" style="font-size:14px;"><div class="section">
-        <div class="section-head">
-          <div class="section-head-left"><span class="section-head-icon">📋</span>Property Information</div>
-        </div>
-        <table class="dtable">
-          <tr><td>Parcel Number</td><td class="val-blue" id="f-geo">—</td></tr>
-          <tr><td>Owner</td><td class="val-blue" id="f-owner">—</td></tr>
-          <tr><td>Mailing Address</td><td id="f-mail">—</td></tr>
-          <tr><td>Area (ac)</td><td id="f-acres">—</td></tr>
-          <tr><td>Legal Description</td><td id="f-legal">—</td></tr>
-          <tr><td>Assessor's Website</td><td id="f-link">—</td></tr>
-        </table>
-      </div></div><div class="two-col-cell" style="font-size:14px;"><div class="section">
-        <div class="section-head">
-          <div class="section-head-left"><span class="section-head-icon">📐</span>Development Regulations</div>
-        </div>
-        <table class="dtable">
-          <tr><td>Zoning</td><td class="val-blue" id="f-zoning">—</td></tr>
-          <tr><td>Land Use</td><td id="f-landuse">—</td></tr>
-          <tr><td>UGA Designation</td><td id="f-uga">—</td></tr>
-          <tr><td>Shoreline Jurisdiction</td><td id="f-shoreline">—</td></tr>
-          <tr><td>Mill Creek Fire District</td><td id="f-millcreek">—</td></tr>
-          <tr>
-            <td><a class="setback-link" href="https://library.municode.com/wa/walla_walla_county/codes/code_of_ordinances?nodeId=TIT17ZO_CH17.18DESTENDI" target="_blank">Front Setback &#8599;</a></td>
-            <td id="f-sfr">—</td>
-          </tr>
-          <tr>
-            <td><a class="setback-link" href="https://library.municode.com/wa/walla_walla_county/codes/code_of_ordinances?nodeId=TIT17ZO_CH17.18DESTENDI" target="_blank">Side Setback &#8599;</a></td>
-            <td id="f-ssi">—</td>
-          </tr>
-          <tr>
-            <td><a class="setback-link" href="https://library.municode.com/wa/walla_walla_county/codes/code_of_ordinances?nodeId=TIT17ZO_CH17.18DESTENDI" target="_blank">Rear Setback &#8599;</a></td>
-            <td id="f-sre">—</td>
-          </tr>
-        </table>
-      </div></div>
+      <div class="section-head">
+        <div class="section-head-left"><span class="section-head-icon">📋</span>Property Information</div>
+      </div>
+      <table class="dtable">
+        <tr><td>Parcel Number</td><td class="val-blue" id="f-geo">—</td></tr>
+        <tr><td>Owner</td><td class="val-blue" id="f-owner">—</td></tr>
+        <tr><td>Mailing Address</td><td id="f-mail">—</td></tr>
+        <tr><td>Legal Description</td><td id="f-legal">—</td></tr>
+        <tr><td>Area (ac)</td><td id="f-acres">—</td></tr>
+        <tr><td>Fire District</td><td id="f-fire">—</td></tr>
+        <tr><td>Plat Book Page</td><td id="f-plat">—</td></tr>
+        <tr><td>Assessor's Website</td><td id="f-link">—</td></tr>
+      </table>
+    </div></div><!--
+ --><div class="two-col-cell" style="font-size:14px;"><div class="section">
+      <div class="section-head">
+        <div class="section-head-left"><span class="section-head-icon">📐</span>Development Regulations</div>
+      </div>
+      <table class="dtable">
+        <tr><td>Zoning</td><td class="val-blue" id="f-zoning">—</td></tr>
+        <tr><td>Land Use</td><td id="f-landuse">—</td></tr>
+        <tr><td>Urban Growth Area</td><td id="f-uga">—</td></tr>
+        <tr><td>Shoreline Designation</td><td id="f-shoreline">—</td></tr>
+        <tr><td>Mill Creek Wildfire Protection</td><td id="f-millcreek">—</td></tr>
+        <tr>
+          <td><a class="setback-link" href="https://library.municode.com/wa/walla_walla_county/codes/code_of_ordinances?nodeId=TIT17ZO_CH17.18DESTENDI" target="_blank">Front Setback &#8599;</a></td>
+          <td id="f-sfr">—</td>
+        </tr>
+        <tr>
+          <td><a class="setback-link" href="https://library.municode.com/wa/walla_walla_county/codes/code_of_ordinances?nodeId=TIT17ZO_CH17.18DESTENDI" target="_blank">Side Setback &#8599;</a></td>
+          <td id="f-ssi">—</td>
+        </tr>
+        <tr>
+          <td><a class="setback-link" href="https://library.municode.com/wa/walla_walla_county/codes/code_of_ordinances?nodeId=TIT17ZO_CH17.18DESTENDI" target="_blank">Rear Setback &#8599;</a></td>
+          <td id="f-sre">—</td>
+        </tr>
+      </table>
+    </div></div>
   </div>
 
   <!-- Critical Areas -->
@@ -281,28 +266,27 @@
     </div>
     <table class="ca-table">
       <tr>
-        <td><div class="ca-label">Flood Risk</div><div class="ca-val" id="f-flood">—</div></td>
-        <td><div class="ca-label">Flood Zone</div><div class="ca-val" id="f-fz">—</div></td>
+        <td><div class="ca-label">Flood Hazard Risk</div><div class="ca-val" id="f-flood">—</div></td>
+        <td><div class="ca-label">Flood Hazard Zone</div><div class="ca-val" id="f-fz">—</div></td>
       </tr>
       <tr>
         <td><div class="ca-label">CARA High Recharge Vulnerability</div><div class="ca-val" id="f-chr">—</div></td>
         <td><div class="ca-label">CARA Moderate Recharge Vulnerability</div><div class="ca-val" id="f-cmr">—</div></td>
       </tr>
       <tr>
-        <td><div class="ca-label">Priority Habitat – Winter Raptor</div><div class="ca-val" id="f-cwi">—</div></td>
-        <td><div class="ca-label">Priority Habitat – Ferruginous Hawk</div><div class="ca-val" id="f-chk">—</div></td>
+        <td><div class="ca-label">Ferruginous Hawk Habitat</div><div class="ca-val" id="f-chk">—</div></td>
+        <td><div class="ca-label">Neotropical Migrant Songbird Habitat</div><div class="ca-val" id="f-cso">—</div></td>
       </tr>
       <tr>
-        <td><div class="ca-label">Priority Habitat – Songbird</div><div class="ca-val" id="f-cso">—</div></td>
+        <td><div class="ca-label">Wintering Birds of Prey Habitat</div><div class="ca-val" id="f-cwi">—</div></td>
         <td><div class="ca-label">Slope / Erosion Hazard</div><div class="ca-val" id="f-csl">—</div></td>
       </tr>
       <tr>
+        <td><div class="ca-label">Liquefaction</div><div class="ca-val" id="f-cli">—</div></td>
         <td><div class="ca-label">Wetlands</div><div class="ca-val" id="f-cwe">—</div></td>
-        <td><div class="ca-label">Liquefaction Hazard</div><div class="ca-val" id="f-cli">—</div></td>
       </tr>
       <tr>
-        <td><div class="ca-label">Riparian Buffer</div><div class="ca-val ca-val-text" id="f-crp">—</div></td>
-        <td></td>
+        <td colspan="2"><div class="ca-label">Riparian Buffer</div><div class="ca-val" id="f-rip">—</div></td>
       </tr>
     </table>
   </div>
@@ -344,15 +328,27 @@
     if (el) el.textContent = val || '—';
   }
 
+  // Set a critical area YES/NO field with color coding
   function setCA(id, val) {
     var el = document.getElementById(id);
     if (!el) return;
-    if (!val) { el.textContent = '—'; return; }
-    el.textContent = val;
-    var lower = val.toLowerCase();
-    if (lower === 'yes') el.classList.add('ca-yes');
-    else if (lower === 'no') el.classList.add('ca-no');
-    else el.classList.add('ca-val-text');
+    var v = val || 'NO';
+    el.textContent = v;
+    var lower = v.toLowerCase();
+    if (lower === 'no') {
+      el.className = 'ca-val ca-no';
+    } else {
+      el.className = 'ca-val ca-yes';
+    }
+  }
+
+  // Set a text-value CA field (flood, riparian) — green if NO, red if has value
+  function setCAText(id, val) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var v = val || 'NO';
+    el.textContent = v;
+    el.className = (v.toUpperCase() === 'NO') ? 'ca-val ca-no' : 'ca-val ca-yes';
   }
 
   // ── Dates ──
@@ -362,7 +358,8 @@
   document.getElementById('footer-date').textContent = 'Generated: ' + dateStr;
 
   // ── Header / situs bar ──
-  set('hdr-situs', get('sit'));
+  var sit = get('sit');
+  set('hdr-situs', sit);
   var ownerEl = document.getElementById('hdr-owner');
   var own = get('own');
   if (ownerEl && own) ownerEl.textContent = 'Owner: ' + own;
@@ -371,9 +368,11 @@
   if (geoEl) geoEl.textContent = geo ? 'Parcel ID: ' + geo : '';
 
   // ── Property Information ──
-  set('f-geo',   get('geo'));
-  set('f-owner', get('own'));
+  set('f-geo',   geo);
+  set('f-owner', own);
+  set('f-fire',  get('fir'));
 
+  // Mailing address
   var mailEl = document.getElementById('f-mail');
   var ad1 = get('ad1'), cty = get('cty'), pst = get('pst'), zip = get('zip');
   var line2 = '';
@@ -388,10 +387,27 @@
   }
 
   set('f-legal', get('leg'));
+
+  // Acreage
   var acr = get('acr');
   document.getElementById('f-acres').textContent = (acr && !isNaN(parseFloat(acr))) ? parseFloat(acr).toFixed(2) + ' ac' : '—';
 
-  // Assessor link — construct full URL from prop_id number
+  // Plat Book Page — display as text, hyperlinked via PLAT_LINK
+  var platEl = document.getElementById('f-plat');
+  var pbp = get('pbp');   // PLAT_BK_PG display text e.g. "Book 01 Page 003"
+  var pbl = get('pbl');   // PLAT_LINK file name e.g. "BK01PG003.PDF"
+  if (platEl) {
+    if (pbp && pbl) {
+      var platUrl = 'https://www.co.walla-walla.wa.us/document_center/GIS/Taxbooks/' + pbl;
+      platEl.innerHTML = '<a class="val-link" href="' + platUrl + '" target="_blank">' + pbp + ' &#8599;</a>';
+    } else if (pbp) {
+      platEl.textContent = pbp;
+    } else {
+      platEl.textContent = '—';
+    }
+  }
+
+  // Assessor link
   var pid = get('lnk');
   var linkEl = document.getElementById('f-link');
   if (linkEl && pid) {
@@ -404,27 +420,55 @@
   // ── Development Regulations ──
   var zon = get('zon'), zab = get('zab');
   set('f-zoning', (zon && zab) ? zon + '  (' + zab + ')' : (zon || null));
+
   var lu = get('lu'), lab = get('lab');
   set('f-landuse', (lu && lab) ? lu + '  (' + lab + ')' : (lu || null));
-  set('f-uga',       get('uga'));
-  set('f-shoreline', get('sho'));
+
+  set('f-uga',      get('uga'));
+
+  var sho = get('sho'), sha = get('sha');
+  set('f-shoreline', (sho && sha) ? sho + '  (' + sha + ')' : (sho || null));
+
   set('f-millcreek', get('mc'));
   set('f-sfr', get('sfr'));
   set('f-ssi', get('ssi'));
   set('f-sre', get('sre'));
 
   // ── Critical Areas ──
-  var fr = get('fr') || '—';
-  var fz = get('fz') || '—';
-  set('f-flood', fr);
-  set('f-fz', fz);
-  set('f-chr', get('chr') || '—'); set('f-cmr', get('cmr') || '—');
-  set('f-cwi', get('cwi') || '—'); set('f-chk', get('chk') || '—');
-  set('f-cso', get('cso') || '—'); set('f-csl', get('csl') || '—');
-  set('f-cwe', get('cwe') || '—'); set('f-cli', get('cli') || '—');
-  set('f-crp', get('crp') || '—');
+  // Text-value fields (green if NO, red if has value)
+  setCAText('f-flood', get('cfr'));
+  setCAText('f-fz',    get('cfz'));
 
-  // ── Show correct button — always runs regardless of any errors above ──
+  // YES/NO fields (green if NO, red if YES)
+  setCA('f-chr', get('chr'));
+  setCA('f-cmr', get('cmr'));
+  setCA('f-chk', get('chk'));
+  setCA('f-cso', get('cso'));
+  setCA('f-cwi', get('cwi'));
+  setCA('f-csl', get('csl'));
+  setCA('f-cli', get('cli'));
+  setCA('f-cwe', get('cwe'));
+
+  // Riparian Buffer — combine name + buffer, suppress double NO
+  var ripEl = document.getElementById('f-rip');
+  var ripName = get('rnn');    // CA_RIP_NAME
+  var ripBuf  = get('rbn');    // CA_RIP_BUFFER
+  if (ripEl) {
+    var nameIsNo = !ripName || ripName.toUpperCase() === 'NO';
+    if (nameIsNo) {
+      // No riparian — show single green NO
+      ripEl.textContent = 'NO';
+      ripEl.className = 'ca-val ca-no';
+    } else {
+      // Has riparian — show name + buffer in red
+      var ripDisplay = ripName;
+      if (ripBuf && ripBuf.toUpperCase() !== 'NO') ripDisplay += ' — ' + ripBuf;
+      ripEl.textContent = ripDisplay;
+      ripEl.className = 'ca-val ca-yes';
+    }
+  }
+
+  // ── Show correct button ──
   try {
     if (p.get('print') === '1') {
       document.getElementById('btn-print').style.display = 'flex';
@@ -432,7 +476,6 @@
       document.getElementById('btn-view').style.display = 'flex';
     }
   } catch(e) {
-    // fallback — show view button
     var vb = document.getElementById('btn-view');
     if (vb) vb.style.display = 'flex';
   }
