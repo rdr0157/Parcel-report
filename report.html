@@ -272,23 +272,23 @@
         <td><div class="ca-label">Flood Hazard Zone</div><div class="ca-val" id="f-fz">—</div></td>
       </tr>
       <tr>
-        <td><div class="ca-label"><a class="ca-link" href="https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Checklist%20-%20Critical%20Aquifer%20Recharge%20Areas.pdf" target="_blank">CARA High Recharge Vulnerability &#8599;</a></div><div class="ca-val" id="f-chr">—</div></td>
-        <td><div class="ca-label"><a class="ca-link" href="https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Checklist%20-%20Critical%20Aquifer%20Recharge%20Areas.pdf" target="_blank">CARA Moderate Recharge Vulnerability &#8599;</a></div><div class="ca-val" id="f-cmr">—</div></td>
+        <td><div class="ca-label">CARA High Recharge Vulnerability</div><div class="ca-val" id="f-chr">—</div></td>
+        <td><div class="ca-label">CARA Moderate Recharge Vulnerability</div><div class="ca-val" id="f-cmr">—</div></td>
       </tr>
       <tr>
-        <td><div class="ca-label"><a class="ca-link" href="https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Checklist%20-%20Habitat%20Conservation%20Areas.pdf" target="_blank">Ferruginous Hawk Habitat &#8599;</a></div><div class="ca-val" id="f-chk">—</div></td>
-        <td><div class="ca-label"><a class="ca-link" href="https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Checklist%20-%20Habitat%20Conservation%20Areas.pdf" target="_blank">Neotropical Migrant Songbird Habitat &#8599;</a></div><div class="ca-val" id="f-cso">—</div></td>
+        <td><div class="ca-label">Ferruginous Hawk Habitat</div><div class="ca-val" id="f-chk">—</div></td>
+        <td><div class="ca-label">Neotropical Migrant Songbird Habitat</div><div class="ca-val" id="f-cso">—</div></td>
       </tr>
       <tr>
-        <td><div class="ca-label"><a class="ca-link" href="https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Checklist%20-%20Habitat%20Conservation%20Areas.pdf" target="_blank">Wintering Birds of Prey Habitat &#8599;</a></div><div class="ca-val" id="f-cwi">—</div></td>
-        <td><div class="ca-label"><a class="ca-link" href="https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Checklist%20-%20Geologically%20Hazardous%20Areas.pdf" target="_blank">Slope / Erosion Hazard &#8599;</a></div><div class="ca-val" id="f-csl">—</div></td>
+        <td><div class="ca-label">Wintering Birds of Prey Habitat</div><div class="ca-val" id="f-cwi">—</div></td>
+        <td><div class="ca-label">Slope / Erosion Hazard</div><div class="ca-val" id="f-csl">—</div></td>
       </tr>
       <tr>
-        <td><div class="ca-label"><a class="ca-link" href="https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Preliminary%20Liquefaction%20Assessment.pdf" target="_blank">Liquefaction &#8599;</a></div><div class="ca-val" id="f-cli">—</div></td>
-        <td><div class="ca-label"><a class="ca-link" href="https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Checklist%20-%20Wetlands.pdf" target="_blank">Wetlands &#8599;</a></div><div class="ca-val" id="f-cwe">—</div></td>
+        <td><div class="ca-label">Liquefaction</div><div class="ca-val" id="f-cli">—</div></td>
+        <td><div class="ca-label">Wetlands</div><div class="ca-val" id="f-cwe">—</div></td>
       </tr>
       <tr>
-        <td colspan="2"><div class="ca-label"><a class="ca-link" href="https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Checklist%20-%20Habitat%20Conservation%20Areas.pdf" target="_blank">Riparian Buffer &#8599;</a></div><div class="ca-val" id="f-rip">—</div></td>
+        <td colspan="2"><div class="ca-label">Riparian Buffer</div><div class="ca-val" id="f-rip">—</div></td>
       </tr>
     </table>
   </div>
@@ -336,27 +336,56 @@
     if (el) el.textContent = val || '—';
   }
 
-  // Set a critical area YES/NO field with color coding
+  // Checklist URLs for each CA field
+  var checklists = {
+    'f-chr': 'https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Checklist%20-%20Critical%20Aquifer%20Recharge%20Areas.pdf',
+    'f-cmr': 'https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Checklist%20-%20Critical%20Aquifer%20Recharge%20Areas.pdf',
+    'f-chk': 'https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Checklist%20-%20Habitat%20Conservation%20Areas.pdf',
+    'f-cso': 'https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Checklist%20-%20Habitat%20Conservation%20Areas.pdf',
+    'f-cwi': 'https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Checklist%20-%20Habitat%20Conservation%20Areas.pdf',
+    'f-csl': 'https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Checklist%20-%20Geologically%20Hazardous%20Areas.pdf',
+    'f-cli': 'https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Preliminary%20Liquefaction%20Assessment.pdf',
+    'f-cwe': 'https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Checklist%20-%20Wetlands.pdf',
+    'f-rip': 'https://cms7files.revize.com/wallawallacounty/document_center/commdev/Applications/Checklist%20-%20Habitat%20Conservation%20Areas.pdf'
+  };
+
+  // Set a YES/NO CA field — green if NO, red + linked if YES
   function setCA(id, val) {
     var el = document.getElementById(id);
     if (!el) return;
     var v = val || 'NO';
-    el.textContent = v;
     var lower = v.toLowerCase();
     if (lower === 'no') {
+      el.textContent = v;
       el.className = 'ca-val ca-no';
     } else {
       el.className = 'ca-val ca-yes';
+      var url = checklists[id];
+      if (url) {
+        el.innerHTML = '<a href="' + url + '" target="_blank" style="color:inherit;text-decoration:none;" onmouseover="this.style.textDecoration=\'underline\'" onmouseout="this.style.textDecoration=\'none\'">' + v + ' &#8599;</a>';
+      } else {
+        el.textContent = v;
+      }
     }
   }
 
-  // Set a text-value CA field (flood, riparian) — green if NO, red if has value
+  // Set a text-value CA field — green if NO, red + linked if has value
   function setCAText(id, val) {
     var el = document.getElementById(id);
     if (!el) return;
     var v = val || 'NO';
-    el.textContent = v;
-    el.className = (v.toUpperCase() === 'NO') ? 'ca-val ca-no' : 'ca-val ca-yes';
+    if (v.toUpperCase() === 'NO') {
+      el.textContent = v;
+      el.className = 'ca-val ca-no';
+    } else {
+      el.className = 'ca-val ca-yes';
+      var url = checklists[id];
+      if (url) {
+        el.innerHTML = '<a href="' + url + '" target="_blank" style="color:inherit;text-decoration:none;" onmouseover="this.style.textDecoration=\'underline\'" onmouseout="this.style.textDecoration=\'none\'">' + v + ' &#8599;</a>';
+      } else {
+        el.textContent = v;
+      }
+    }
   }
 
   // ── Dates ──
@@ -459,20 +488,19 @@
 
   // Riparian Buffer — combine name + buffer, suppress double NO
   var ripEl = document.getElementById('f-rip');
-  var ripName = get('rnn');    // CA_RIP_NAME
-  var ripBuf  = get('rbn');    // CA_RIP_BUFFER
+  var ripName = get('rnn');
+  var ripBuf  = get('rbn');
   if (ripEl) {
     var nameIsNo = !ripName || ripName.toUpperCase() === 'NO';
     if (nameIsNo) {
-      // No riparian — show single green NO
       ripEl.textContent = 'NO';
       ripEl.className = 'ca-val ca-no';
     } else {
-      // Has riparian — show name + buffer in red
       var ripDisplay = ripName;
       if (ripBuf && ripBuf.toUpperCase() !== 'NO') ripDisplay += ' — ' + ripBuf;
-      ripEl.textContent = ripDisplay;
       ripEl.className = 'ca-val ca-yes';
+      var ripUrl = checklists['f-rip'];
+      ripEl.innerHTML = '<a href="' + ripUrl + '" target="_blank" style="color:inherit;text-decoration:none;" onmouseover="this.style.textDecoration=\'underline\'" onmouseout="this.style.textDecoration=\'none\'">' + ripDisplay + ' &#8599;</a>';
     }
   }
 
